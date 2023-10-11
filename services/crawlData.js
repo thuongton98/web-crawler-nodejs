@@ -8,7 +8,15 @@ const getCrawlData = async ({ id }) => {
 console.log(`Visiting ${url}...`);
 
 //initiate the browser 
-const browser = await puppeteer.launch({headless: false}); 
+const browser = await puppeteer.launch({
+  executablePath: '/usr/bin/google-chrome-stable',
+  headless: false,
+  args: ['--disable-features=site-per-process, --window-size=1420,880'],
+  defaultViewport: {
+    width: 1420,
+    height: 880,
+  },
+}); 
 
 //create a new in headless chrome 
 const page = await browser.newPage(); 
@@ -16,16 +24,16 @@ const page = await browser.newPage();
 //go to target website 
 await page.goto(url, { 
 		//wait for content to load 
-		waitUntil: 'networkidle0', 
+		waitUntil: 'load'
 	}); 
 
 //get data
-const data = await page.evaluate(() => 
-  Array.from(document.querySelectorAll('.u9tve2')).map(a => a.textContent) 
+const name = await page.evaluate(() => 
+  Array.from(document.querySelectorAll('#productTitle')).map(a => a.textContent.trim()) 
 );
 
 await browser.close(); 
-return data
+return name
 };
 
 module.exports = {

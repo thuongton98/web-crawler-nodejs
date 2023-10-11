@@ -4,9 +4,9 @@ const { writeJsonToFile } = require("../utils");
 
 module.exports = async (app) => {
   // Route crawling by ID
-  app.get("/crawl/:id", async function (req, res) {
-    let id = req.params.id;
-
+  app.get("/crawl", async function (req, res) {
+    let id = req.query.id
+    
     // Check if id exist
     if (!id) {
       res.send({});
